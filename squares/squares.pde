@@ -37,6 +37,7 @@ void drawSquare(int row, int col) {
     rect(0, 0, square_size, square_size);
 
     int count = radius(row, col);
+    // int count = reverseRadius(row, col);
     // int count = horizontal(row, col);
     // int count = vertical(row, col);
     int[] strokes = randomStrokes(count);
@@ -86,6 +87,11 @@ void shuffle(int[] array) {
 int radius(int row, int col) {
     int mid = (squares - 1) / 2;
     return max(abs(row - mid), abs(col - mid));
+}
+
+int reverseRadius(int row, int col) {
+    int mid = (squares - 1) / 2;
+    return mid - radius(row, col);
 }
 
 int horizontal(int row, int col) {
