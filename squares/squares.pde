@@ -9,6 +9,10 @@ int square_size = 17;
 
 void setup() {
     size(465, 465);
+    noLoop();
+}
+
+void draw() {
     background(#ffffff);
     stroke(#000000);
     noFill();
@@ -19,8 +23,14 @@ void setup() {
             drawSquare(row, col);
         }
     }
+}
 
-    save("out.png");
+void keyPressed() {
+    if (key == ' ') {
+        redraw();
+    } else if (key == 's' || key == 'S') {
+        save("out.png");
+    }
 }
 
 void drawBorder() {
