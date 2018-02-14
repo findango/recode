@@ -1,6 +1,6 @@
-// Based on "Random Squares" by Charles Csuri
+// Based on "Random Squares" by Herbert Franke
 // Originally published in "Computer Graphics and Art" vol1 no2, 1976
-// See: http://recodeproject.com/translation/chris-allick-direct-random-squares-charles-csuri
+// See: http://recodeproject.com/artwork/v1n2random-squares
 
 int margin = 30;
 
