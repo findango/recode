@@ -3,7 +3,7 @@
 
 int tile_size = 35;
 
-color violet =  #601d48;
+color violet = #601d48;
 color bleu = #2571bc;
 color vert = #44926b;
 color jaune = #fbe34d;
@@ -21,7 +21,7 @@ void draw() {
 
     int start_col = -10;
     for (int row = -2; row < 16; row += 3) {
-        for(int col = start_col; col < 19; col += 10) {
+        for(int col = start_col; col < 16; col += 10) {
             drawCross(row, col, violet);
             drawCross(row + 1, col + 2, vert);
             drawCross(row + 2, col + 4, orange);
@@ -41,20 +41,20 @@ void keyPressed() {
     }
 }
 
-void square(int x, int y, int extent) {
-    rect(x, y, extent, extent);
+void square(int row, int col) {
+    int x = col * tile_size;
+    int y = row * tile_size;
+
+    rect(x, y, tile_size, tile_size);
 }
 
 void drawCross(int row, int col, color c) {
     noStroke();
     fill(c);
 
-    int x = col * tile_size;
-    int y = row * tile_size;
-
-    square(x + tile_size, y, tile_size);
-    square(x, y + tile_size, tile_size);
-    square(x + tile_size, y + tile_size, tile_size);
-    square(x + tile_size * 2, y + tile_size, tile_size);
-    square(x + tile_size, y + tile_size * 2, tile_size);
+    square(row, col + 1);
+    square(row + 1, col);
+    square(row + 1, col + 1);
+    square(row + 1, col + 2);
+    square(row + 2, col + 1);
 }
