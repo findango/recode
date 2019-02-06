@@ -15,3 +15,9 @@ http://recodeproject.com/artwork/v1n3structure-square-series-inwards
 <img src="./random_squares/squares.png" width="230" />
 
 http://recodeproject.com/artwork/v1n2random-squares
+
+## Violet, Bleu, Vert, Jaune, Orange, Rouge
+
+<img src="./morellet/morellet.png" width="230" />
+
+https://www.centrepompidou.fr/cpv/resource/cxx585o/ryjG5EL
