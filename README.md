@@ -21,3 +21,9 @@ http://recodeproject.com/artwork/v1n2random-squares
 <img src="./morellet/morellet.png" width="230" />
 
 https://www.centrepompidou.fr/cpv/resource/cxx585o/ryjG5EL
+
+## Fifteen Etchings
+
+<img src="./fifteen_etchings/fifteen_etchings.png" width="230" />
+
+Sol LeWitt: Straight lines in four directions and all their possible combinations.
