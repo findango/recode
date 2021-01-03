@@ -41,20 +41,13 @@ void keyPressed() {
     }
 }
 
-void square(int row, int col) {
-    int x = col * tile_size;
-    int y = row * tile_size;
-
-    rect(x, y, tile_size, tile_size);
-}
-
 void drawCross(int row, int col, color c) {
+    int top = row * tile_size;
+    int left = col * tile_size;
+    int center = left + tile_size;
+    int middle = top + tile_size;
     noStroke();
     fill(c);
-
-    square(row, col + 1);
-    square(row + 1, col);
-    square(row + 1, col + 1);
-    square(row + 1, col + 2);
-    square(row + 2, col + 1);
+    rect(center, top, tile_size, tile_size * 3);
+    rect(left, middle, tile_size * 3, tile_size);
 }
