@@ -20,6 +20,16 @@ const grid = r.grid({
 
 const slash = (width, height) => r.line(0, height, width, 0);
 const backslash = (width, height) => r.line(0, 0, height, width);
+const bar = (width, height) => r.line(0, height, width, height);
+const pipe = (width, height) => r.line(width, 0, width, height);
+const plus = (width, height) =>
+    new Rune.Path()
+        .moveTo(width / 2, 0)
+        .lineTo(width / 2, height)
+        .moveTo(0, height / 2)
+        .lineTo(width, height / 2);
+const dot = (width, height) =>
+    r.rect(width / 2 - 1, height / 2 - 1, 2, 2).fill('none');
 
 const { rows, columns, moduleWidth, moduleHeight, width, height } = grid.state;
 
@@ -35,5 +45,7 @@ for (let row = 1; row <= rows; row++) {
         }
     }
 }
+
+// grid.add(r.rect(0, 0, width, height).fill('none'), 0, 0);
 
 r.draw();
