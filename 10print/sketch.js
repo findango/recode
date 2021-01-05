@@ -1,5 +1,14 @@
 // 10 PRINT CHR$(205.5+RND(1)); : GOTO 10
 
+const colors = {
+    tart_orange: '#F25757',
+    gunmetal: '#2B303A',
+    cornflower_blue: '#7189FF',
+    gold_crayola: '#D7BE82',
+    space_cadet: '#273469',
+    international_orange: '#FF5714',
+};
+
 const r = new Rune({
     container: 'body',
     width: 720,
@@ -33,19 +42,23 @@ const dot = (width, height) =>
 
 const { rows, columns, moduleWidth, moduleHeight, width, height } = grid.state;
 
+// grid.add(r.rect(0, 0, width, height).fill(colors.space_cadet), 0, 0);
+
 for (let row = 1; row <= rows; row++) {
     for (let col = 1; col <= columns; col++) {
         // leave some squares blank
         if (Math.random() > 0.1) {
             const line =
                 Math.random() > 0.5
-                    ? slash(moduleWidth, moduleHeight).strokeWidth(2)
-                    : backslash(moduleWidth, moduleHeight).strokeWidth(2);
+                    ? slash(moduleWidth, moduleHeight)
+                          .strokeWidth(2)
+                          .stroke(colors.tart_orange)
+                    : backslash(moduleWidth, moduleHeight)
+                          .strokeWidth(2)
+                          .stroke(colors.tart_orange);
             grid.add(line, col, row);
         }
     }
 }
-
-// grid.add(r.rect(0, 0, width, height).fill('none'), 0, 0);
 
 r.draw();
