@@ -30,6 +30,6 @@ Sol LeWitt: Straight lines in four directions and all their possible combination
 
 ## 10 PRINT
 
-<img src="./10PRINT/10PRINT.png" width="245" />
+<img src="./10print/10PRINT.png" width="245" />
 
 Classic Commodore 64
