@@ -27,6 +27,16 @@ const grid = r.grid({
     columns: 42,
 });
 
+// pick an item from the list with weighted probablility [p, value]. No error checking.
+const pick = (list) => {
+    const weightTotal = list.reduce((total, item) => total + item[0], 0);
+    let threshold = Math.random() * weightTotal;
+    return list.find((item) => {
+        threshold = threshold - item[0];
+        return threshold <= 0;
+    })[1];
+};
+
 const slash = (width, height) => r.line(0, height, width, 0);
 const backslash = (width, height) => r.line(0, 0, height, width);
 const bar = (width, height) => r.line(0, height, width, height);
@@ -38,25 +48,26 @@ const plus = (width, height) =>
         .moveTo(0, height / 2)
         .lineTo(width, height / 2);
 const dot = (width, height) =>
-    r.rect(width / 2 - 1, height / 2 - 1, 2, 2).fill('none');
+    r.circle(width / 2, height / 2, 2).fill('#ffffff');
 
 const { rows, columns, moduleWidth, moduleHeight, width, height } = grid.state;
 
-// grid.add(r.rect(0, 0, width, height).fill(colors.space_cadet), 0, 0);
-
 for (let row = 1; row <= rows; row++) {
     for (let col = 1; col <= columns; col++) {
-        // leave some squares blank
-        if (Math.random() > 0.1) {
-            const line =
-                Math.random() > 0.5
-                    ? slash(moduleWidth, moduleHeight)
-                          .strokeWidth(2)
-                          .stroke(colors.tart_orange)
-                    : backslash(moduleWidth, moduleHeight)
-                          .strokeWidth(2)
-                          .stroke(colors.tart_orange);
-            grid.add(line, col, row);
+        const obj = pick([
+            [0.1, null],
+            [0.4, slash],
+            [0.4, backslash],
+            [0.1, dot],
+        ]);
+        if (obj) {
+            grid.add(
+                obj(moduleWidth, moduleHeight)
+                    .strokeWidth(2)
+                    .stroke(colors.tart_orange),
+                col,
+                row,
+            );
         }
     }
 }
