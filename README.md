@@ -27,3 +27,9 @@ https://www.centrepompidou.fr/cpv/resource/cxx585o/ryjG5EL
 <img src="./fifteen_etchings/fifteen_etchings.png" width="230" />
 
 Sol LeWitt: Straight lines in four directions and all their possible combinations.
+
+## 10 PRINT
+
+<img src="./10PRINT/10PRINT.png" width="245" />
+
+Classic Commodore 64
