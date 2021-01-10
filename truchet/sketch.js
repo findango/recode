@@ -50,6 +50,16 @@ const cross = (w, h) => {
     return g;
 };
 
+const crossUnder = (w, h) => {
+    const g = r.group();
+    r.line(w / 2, 0, w / 2, h, g).stroke(false);
+    r.line(0, h / 2, w / 2 - 5, h / 2, g).stroke(false);
+    r.line(w, h / 2, w / 2 + 5, h / 2, g).stroke(false);
+    return g;
+};
+
+const crossOver = (w, h) => crossUnder(w, h).rotate(90, w / 2, h / 2);
+
 // Semi-circles in the top-right and bottom-left
 const cornersA = (w, h) => {
     const g = r.group();
@@ -74,9 +84,11 @@ const { rows, columns, moduleWidth, moduleHeight } = grid.state;
 for (let row = 1; row <= rows; row++) {
     for (let col = 1; col <= columns; col++) {
         const obj = pick([
-            [0.4, cornersA],
-            [0.4, cornersB],
-            [0.2, cross],
+            [3, cornersA],
+            [3, cornersB],
+            [1, cross],
+            [0.5, crossUnder],
+            [0.5, crossOver],
         ]);
         if (obj) {
             grid.add(
