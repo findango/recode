@@ -33,3 +33,9 @@ Sol LeWitt: Straight lines in four directions and all their possible combination
 <img src="./10print/10PRINT.png" width="245" />
 
 Classic Commodore 64
+
+## Truchet Tiling
+
+<img src="./truchet/truchet.png" width="250" />
+
+https://en.wikipedia.org/wiki/Truchet_tiles
