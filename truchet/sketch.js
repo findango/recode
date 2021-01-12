@@ -10,16 +10,30 @@ const colors = {
     international_orange: '#FF5714',
     lime_green: '#81B622',
     midnight_blue: '#145DA0',
+    pale_yellow: '#FFF4BD',
+    pewter: '#BCBEC0',
+    slate: '#EAEDF0',
+    white: '#FFFFFF',
 };
 
 const width = 720;
 const height = 720;
 const margin = 40;
 
+let random;
+
+// random number generator with seed
+const mulberry32 = (seed) => () => {
+    let t = (seed += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+
 // pick an item from the list with weighted probablility [p, value]. No error checking.
 const pick = (list) => {
     const weightTotal = list.reduce((total, item) => total + item[0], 0);
-    let threshold = Math.random() * weightTotal;
+    let threshold = random() * weightTotal;
     return list.find((item) => {
         threshold = threshold - item[0];
         return threshold <= 0;
@@ -64,7 +78,7 @@ const cornersA = (w, h) => {
     return g;
 };
 
-// Just a 90 degree rotation of cornersA
+// Just a 90 degree rotation of cornersA. Only works if your tiles are square.
 const cornersB = (w, h) => cornersA(w, h).rotate(90, w / 2, h / 2);
 
 const sketchDiv = document.getElementById('sketch').getBoundingClientRect();
@@ -93,9 +107,12 @@ const render = () => {
         columns: settings.getValue('Grid'),
     });
 
+    const seed = Number.parseInt(settings.getValue('Seed'), 10);
+    random = mulberry32(seed);
+
     const { rows, columns, moduleWidth, moduleHeight } = grid.state;
-    const stroke = colors[settings.getValue('Color').value];
-    const strokeWidth = settings.getValue('StrokeWidth');
+    const stroke = colors[settings.getValue('Stroke Color').value];
+    const strokeWidth = settings.getValue('Stroke Width');
     const tiles = [
         [3, cornersA],
         [3, cornersB],
@@ -108,13 +125,11 @@ const render = () => {
         for (let col = 1; col <= columns; col++) {
             const tile = pick(tiles);
             if (tile) {
-                grid.add(
-                    tile(moduleWidth, moduleHeight)
-                        .stroke(stroke)
-                        .strokeWidth(strokeWidth),
-                    col,
-                    row,
-                );
+                const t = tile(moduleWidth, moduleHeight)
+                    .stroke(stroke)
+                    .strokeWidth(strokeWidth)
+                    .strokeCap('round');
+                grid.add(t, col, row);
             }
         }
     }
@@ -126,7 +141,14 @@ settings
     .setGlobalChangeHandler(render)
     .addText('Seed', '12345')
     .addRange('Grid', 3, 75, 28, 1)
-    .addRange('StrokeWidth', 0.5, 25, 1.5, 0.5)
-    .addDropDown('Color', Object.keys(colors));
+    .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
+    .addDropDown('Stroke Color', Object.keys(colors))
+    .addDropDown('Background Color', Object.keys(colors), (c) => {
+        document.getElementById('sketch').style.backgroundColor =
+            colors[c.value] || '#ffffff';
+    });
+
+// FIXME not ideal
+settings.setValue('Background Color', Object.keys(colors).indexOf('white'));
 
 render();
