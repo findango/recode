@@ -1,0 +1,19 @@
+body {
+    background-color: whitesmoke;
+    margin: 40px 80px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.layout {
+    display: flex;
+}
+
+#sketch {
+    background-color: #fff;
+}
+
+#controls {
+    flex-grow: 1;
+    margin-left: 20px;
+}
