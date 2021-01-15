@@ -35,7 +35,7 @@ const h = grid.state.moduleHeight;
 
 randomCells(
     grid,
-    ({ row, col }) => {
+    ({ row }) => {
         const hue = 200 - 4 * row;
         return r
             .rect(0, 0, w, h)
@@ -47,7 +47,7 @@ randomCells(
 );
 randomCells(
     grid,
-    ({ row, col }) => {
+    ({ row }) => {
         const hue = 40 + 4 * row;
         return r
             .rect(0, 0, w, h)
@@ -56,5 +56,12 @@ randomCells(
     },
     0.2,
 );
+
+// row(grid, 5, ({ row }) => {
+//     return r
+//         .rect(w * 0.1, h * 0.1, w * 0.9, h * 0.9)
+//         .stroke('none')
+//         .fill('#ff0000');
+// });
 
 r.draw();
