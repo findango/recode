@@ -23,8 +23,6 @@ const grid = r.grid({
     columns: 17,
 });
 
-const shuffle = (array) => array.sort(() => Math.random() - 0.5);
-
 const randomLines = (w, h, count) => {
     const lines = [
         [w / 2, 0, w / 2, h],
