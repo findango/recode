@@ -55,15 +55,8 @@ const makeCell = (width, height, count) => {
     return group;
 };
 
-for (let row = 1; row <= grid.state.rows; row++) {
-    for (let col = 1; col <= grid.state.columns; col++) {
-        const cell = makeCell(
-            grid.state.moduleWidth,
-            grid.state.moduleHeight,
-            Math.ceil((row - 1) / 2),
-        );
-        grid.add(cell, col, row);
-    }
-}
+forEachCell(grid, ({ row, w, h }) => {
+    return makeCell(w, h, Math.ceil((row - 1) / 2));
+});
 
 r.draw();

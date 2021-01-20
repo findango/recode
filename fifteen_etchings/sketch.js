@@ -30,18 +30,19 @@ const squares = [
     'hl', 'vrl', 'hvl', 'hvrl'
 ];
 
+const paths = {
+    h: (w, h) => new Rune.Line(0, h / 2, w, h / 2),
+    v: (w, h) => new Rune.Line(w / 2, 0, w / 2, h),
+    r: (w, h) => new Rune.Line(0, h, w, 0),
+    l: (w, h) => new Rune.Line(w, h, 0, 0),
+};
+
 const tile = (w, h, lines = '') => {
     const color = '#273469';
     const g = new Rune.Group();
     lines.split('').forEach((l) => {
-        if (l === 'h') {
-            g.add(new Rune.Line(0, h / 2, w, h / 2).stroke(color));
-        } else if (l === 'v') {
-            g.add(new Rune.Line(w / 2, 0, w / 2, h).stroke(color));
-        } else if (l === 'r') {
-            g.add(new Rune.Line(0, h, w, 0).stroke(color));
-        } else if (l === 'l') {
-            g.add(new Rune.Line(w, h, 0, 0).stroke(color));
+        if (paths[l]) {
+            g.add(paths[l](w, h).stroke(color).strokeWidth(1));
         }
     });
     if (lines) {
@@ -52,17 +53,13 @@ const tile = (w, h, lines = '') => {
                 .strokeWidth(2),
         );
     }
-    g.strokeWidth(1);
 
     return g;
 };
 
-const { rows, columns, moduleWidth, moduleHeight } = grid.state;
-for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < columns; c++) {
-        const t = r * columns + c;
-        grid.add(tile(moduleWidth, moduleHeight, squares[t]), r + 1, c + 1);
-    }
-}
+forEachCell(grid, ({ row, col, w, h }) => {
+    const t = (row - 1) * grid.state.columns + (col - 1);
+    return tile(w, h, squares[t]);
+});
 
 r.draw();
