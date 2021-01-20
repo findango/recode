@@ -19,8 +19,8 @@ const grid = r.grid({
     width: width,
     height: height,
     gutter: 12,
-    rows: 16,
-    columns: 16,
+    rows: 17,
+    columns: 17,
 });
 
 const shuffle = (array) => array.sort(() => Math.random() - 0.5);
@@ -46,17 +46,31 @@ const makeCell = (width, height, count) => {
         r
             .line(...points, group)
             .stroke('#273469')
-            .strokeWidth(0.75),
+            .strokeWidth(0.5),
     );
     r.rect(0, 0, width, height, group)
         .fill('none')
         .stroke('#273469')
-        .strokeWidth(1);
+        .strokeWidth(0.5);
     return group;
 };
 
-forEachCell(grid, ({ row, w, h }) => {
-    return makeCell(w, h, Math.ceil((row - 1) / 2));
+const linear = (idx) => Math.ceil((idx - 1) / 2);
+const outer = (row, col, rowCount) => {
+    const mid = Math.ceil(rowCount / 2);
+    return Math.max(Math.abs(row - mid), Math.abs(col - mid));
+};
+const inner = (row, col, rowCount) => {
+    const mid = Math.floor(rowCount / 2);
+    return mid - outer(row, col, rowCount);
+};
+
+forEachCell(grid, ({ row, col, w, h }) => {
+    const lineCount = linear(row);
+    // const lineCount = linear(col);
+    // const lineCount = inner(row, col, grid.state.rows);
+    // const lineCount = outer(row, col, grid.state.rows);
+    return makeCell(w, h, lineCount);
 });
 
 r.draw();
