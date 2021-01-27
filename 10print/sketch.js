@@ -1,29 +1,22 @@
 // 10 PRINT CHR$(205.5+RND(1)); : GOTO 10
 
-const colors = {
-    tart_orange: '#F25757',
-    gunmetal: '#2B303A',
-    cornflower_blue: '#7189FF',
-    gold_crayola: '#D7BE82',
-    space_cadet: '#273469',
-    international_orange: '#FF5714',
-};
-
 const r = new Rune({
     container: 'body',
     width: 720,
-    height: 720,
+    height: 840,
     debug: false,
 });
 
-const margin = 20;
+r.rect(0, 0, r.width, r.height).stroke('none').fill(colors.deep_blue);
+
+const margin = 40;
 
 const grid = r.grid({
     x: margin,
     y: margin,
     width: r.width - 2 * margin,
     height: r.height - 2 * margin,
-    rows: 42,
+    rows: 49,
     columns: 42,
 });
 
@@ -47,8 +40,7 @@ const plus = (width, height) =>
         .lineTo(width / 2, height)
         .moveTo(0, height / 2)
         .lineTo(width, height / 2);
-const dot = (width, height) =>
-    r.circle(width / 2, height / 2, 2).fill('#ffffff');
+const dot = (width, height) => r.circle(width / 2, height / 2, 2).fill('none');
 
 const { rows, columns, moduleWidth, moduleHeight, width, height } = grid.state;
 
@@ -63,7 +55,7 @@ for (let row = 1; row <= rows; row++) {
         if (obj) {
             grid.add(
                 obj(moduleWidth, moduleHeight)
-                    .strokeWidth(2)
+                    .strokeWidth(1.5)
                     .stroke(colors.tart_orange),
                 col,
                 row,
