@@ -1,21 +1,6 @@
 // Truchet Tiles
 // https://en.wikipedia.org/wiki/Truchet_tiles
 
-const colors = {
-    tart_orange: '#F25757',
-    gunmetal: '#2B303A',
-    cornflower_blue: '#7189FF',
-    gold_crayola: '#D7BE82',
-    space_cadet: '#273469',
-    international_orange: '#FF5714',
-    lime_green: '#81B622',
-    midnight_blue: '#145DA0',
-    pale_yellow: '#FFF4BD',
-    pewter: '#BCBEC0',
-    slate: '#EAEDF0',
-    white: '#FFFFFF',
-};
-
 const width = 720;
 const height = 720;
 const margin = 40;
