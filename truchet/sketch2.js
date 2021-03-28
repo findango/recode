@@ -2,7 +2,7 @@
 // https://en.wikipedia.org/wiki/Truchet_tiles
 
 const width = 720;
-const height = 720;
+const height = 960;
 const margin = 40;
 
 let random;
@@ -15,26 +15,21 @@ const mulberry32 = (seed) => () => {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
 };
 
-// A simple cross
-const cross = (w, h) => {
+const oneLine = (w, h) => {
+    const angle = Math.random() < 0.5 ? 0 : 90;
     const g = new Rune.Group();
-    g.add(new Rune.Line(w / 2, 0, w / 2, h).stroke(false));
     g.add(new Rune.Line(0, h / 2, w, h / 2).stroke(false));
+    g.rotate(angle, w / 2, h / 2);
     return g;
 };
 
-const crossUnder = (w, h) => {
-    const g = new Rune.Group();
-    g.add(new Rune.Line(w / 2, 0, w / 2, h).stroke(false));
-    g.add(new Rune.Line(0, h / 2, w / 2 - 5, h / 2).stroke(false));
-    g.add(new Rune.Line(w, h / 2, w / 2 + 5, h / 2).stroke(false));
-    return g;
-};
-
-const crossOver = (w, h) => crossUnder(w, h).rotate(90, w / 2, h / 2);
-
-// Semi-circles in the top-right and bottom-left
-const cornersA = (w, h) => {
+const oneCorner = (w, h) => {
+    const angle = pick([
+        [1, 0],
+        [1, 90],
+        [1, 180],
+        [1, 270],
+    ]);
     const g = new Rune.Group();
     g.add(
         new Rune.Path(0, 0, g)
@@ -43,18 +38,9 @@ const cornersA = (w, h) => {
             .fill('none')
             .stroke(false),
     );
-    g.add(
-        new Rune.Path(0, 0, g)
-            .moveTo(0, h / 2)
-            .curveTo(w / 2, h / 2, w / 2, h)
-            .fill('none')
-            .stroke(false),
-    );
+    g.rotate(angle, w / 2, h / 2);
     return g;
 };
-
-// Just a 90 degree rotation of cornersA. Only works if your tiles are square.
-const cornersB = (w, h) => cornersA(w, h).rotate(90, w / 2, h / 2);
 
 const sketchDiv = document.getElementById('sketch').getBoundingClientRect();
 const settings = QuickSettings.create(
@@ -73,41 +59,51 @@ const render = () => {
         debug: false,
     });
 
+    // const grid1 = r.grid({
+    //     x: margin,
+    //     y: margin,
+    //     width: width,
+    //     height: height,
+    //     rows: settings.getValue('Grid') / 2,
+    //     columns: settings.getValue('Grid') / 2,
+    // });
+
+    // forEachCell(grid1, ({ w, h }) => {
+    //     return r
+    //         .rect(0, 0, w / 2, h / 2)
+    //         .stroke(colors.lime_green)
+    //         .fill('none')
+    //         .rotate(60, w / 2, h / 2);
+    // });
+
     const grid = r.grid({
         x: margin,
         y: margin,
         width: width,
         height: height,
         rows: settings.getValue('Grid'),
-        columns: settings.getValue('Grid'),
+        columns: Math.floor(settings.getValue('Grid') * 0.75),
     });
 
     const seed = Number.parseInt(settings.getValue('Seed'), 10);
     random = mulberry32(seed);
 
-    const { rows, columns, moduleWidth, moduleHeight } = grid.state;
     const stroke = colors[settings.getValue('Stroke Color').value];
     const strokeWidth = settings.getValue('Stroke Width');
     const tiles = [
-        [3, cornersA],
-        [3, cornersB],
-        [1, cross],
-        [0.5, crossUnder],
-        [0.5, crossOver],
+        [1, oneLine],
+        [1, oneCorner],
     ];
 
-    for (let row = 1; row <= rows; row++) {
-        for (let col = 1; col <= columns; col++) {
-            const tile = pick(tiles);
-            if (tile) {
-                const t = tile(moduleWidth, moduleHeight)
-                    .stroke(stroke)
-                    .strokeWidth(strokeWidth)
-                    .strokeCap('round');
-                grid.add(t, col, row);
-            }
+    forEachCell(grid, ({ w, h }) => {
+        const tile = pick(tiles);
+        if (tile) {
+            return tile(w, h)
+                .stroke(stroke)
+                .strokeWidth(strokeWidth)
+                .strokeCap('round');
         }
-    }
+    });
 
     r.draw();
 };
