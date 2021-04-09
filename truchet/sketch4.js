@@ -121,7 +121,10 @@ const render = () => {
 
     randomCells(grid, ({ row, col, w, h }) => {
         if (row > 1 && col > 1 && row % 2 && col % 2) {
-            return cross(w, h).stroke(colors.gold_crayola).strokeWidth(1).strokeCap('butt');
+            return cross(w, h)
+                .stroke(colors.gold_crayola)
+                .strokeWidth(strokeWidth)
+                .strokeCap('butt');
         }
     });
 
