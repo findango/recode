@@ -5,8 +5,6 @@ const width = 720;
 const height = 720;
 const margin = 40;
 
-let random;
-
 // A simple cross
 const cross = (w, h) => {
     const g = new Rune.Group();
@@ -56,8 +54,9 @@ const settings = QuickSettings.create(
 );
 
 const render = () => {
-    document.getElementById('sketch').innerHTML = '';
+    Math.seedrandom(settings.getValue('Seed').trim(), { global: true });
 
+    document.getElementById('sketch').innerHTML = '';
     const r = new Rune({
         container: '#sketch',
         width: width + 2 * margin,
@@ -73,9 +72,6 @@ const render = () => {
         rows: settings.getValue('Grid'),
         columns: settings.getValue('Grid'),
     });
-
-    const seed = Number.parseInt(settings.getValue('Seed'), 10);
-    random = mulberry32(seed);
 
     const { rows, columns, moduleWidth, moduleHeight } = grid.state;
     const stroke = colors[settings.getValue('Stroke Color').value];

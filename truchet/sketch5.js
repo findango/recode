@@ -5,8 +5,6 @@ const width = 720;
 const height = 960;
 const margin = 60;
 
-let random;
-
 const line = (w, h) => {
     return new Rune.Line(w, 0, w, h).stroke(false).strokeCap('butt');
 };
@@ -89,8 +87,9 @@ const distributions = {
 };
 
 const render = () => {
-    document.getElementById('sketch').innerHTML = '';
+    Math.seedrandom(settings.getValue('Seed').trim(), { global: true });
 
+    document.getElementById('sketch').innerHTML = '';
     const r = new Rune({
         container: '#sketch',
         width: width + 2 * margin,
@@ -106,9 +105,6 @@ const render = () => {
         rows: settings.getValue('Grid'),
         columns: Math.floor(settings.getValue('Grid') * 0.75),
     });
-
-    const seed = Number.parseInt(settings.getValue('Seed'), 10);
-    random = mulberry32(seed);
 
     const stroke = colors[settings.getValue('Stroke Color').value];
     const strokeWidth = settings.getValue('Stroke Width');
@@ -155,7 +151,7 @@ const settings = QuickSettings.create(
     'Settings',
 )
     .setGlobalChangeHandler(render)
-    .addText('Seed', '12345')
+    .addText('Seed', Date.now())
     .addRange('Grid', 4, 60, 24, 4)
     .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
     .addDropDown('Stroke Color', Object.keys(colors))

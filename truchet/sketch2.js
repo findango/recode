@@ -5,8 +5,6 @@ const width = 720;
 const height = 960;
 const margin = 40;
 
-let random;
-
 const oneLine = (w, h) => {
     const angle = Math.random() < 0.5 ? 0 : 90;
     const g = new Rune.Group();
@@ -42,8 +40,9 @@ const settings = QuickSettings.create(
 );
 
 const render = () => {
-    document.getElementById('sketch').innerHTML = '';
+    Math.seedrandom(settings.getValue('Seed').trim(), { global: true });
 
+    document.getElementById('sketch').innerHTML = '';
     const r = new Rune({
         container: '#sketch',
         width: width + 2 * margin,
@@ -76,9 +75,6 @@ const render = () => {
         rows: settings.getValue('Grid'),
         columns: Math.floor(settings.getValue('Grid') * 0.75),
     });
-
-    const seed = Number.parseInt(settings.getValue('Seed'), 10);
-    random = mulberry32(seed);
 
     const stroke = colors[settings.getValue('Stroke Color').value];
     const strokeWidth = settings.getValue('Stroke Width');
