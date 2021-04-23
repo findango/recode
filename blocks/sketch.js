@@ -1,12 +1,3 @@
-const colors = {
-    tart_orange: '#F25757',
-    gunmetal: '#2B303A',
-    cornflower_blue: '#7189FF',
-    gold_crayola: '#D7BE82',
-    space_cadet: '#273469',
-    international_orange: '#FF5714',
-};
-
 const width = 520;
 const height = 520;
 const margin = 40;
@@ -37,11 +28,7 @@ randomCells(
     grid,
     ({ row }) => {
         const hue = 200 - 4 * row;
-        return r
-            .rect(0, 0, w, h)
-            .stroke('hsv', hue, 70, 68)
-            .strokeWidth(0.5)
-            .fill('none');
+        return r.rect(0, 0, w, h).stroke('hsv', hue, 70, 68).strokeWidth(0.5).fill('none');
     },
     0.2,
 );
@@ -49,10 +36,7 @@ randomCells(
     grid,
     ({ row }) => {
         const hue = 40 + 4 * row;
-        return r
-            .rect(0, 0, w, h)
-            .stroke('hsv', hue, 70, 68)
-            .fill('hsv', hue, 70, 68);
+        return r.rect(0, 0, w, h).stroke('hsv', hue, 70, 68).fill('hsv', hue, 70, 68);
     },
     0.2,
 );
