@@ -7,14 +7,6 @@ const margin = 60;
 
 let random;
 
-// random number generator with seed
-const mulberry32 = (seed) => () => {
-    let t = (seed += 0x6d2b79f5);
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-
 const line = (w, h) => {
     return new Rune.Line(w, 0, w, h).stroke(false).strokeCap('butt');
 };
@@ -134,7 +126,7 @@ const render = () => {
 settings
     .setGlobalChangeHandler(render)
     .addText('Seed', '12345')
-    .addRange('Grid', 3, 75, 24, 1)
+    .addRange('Grid', 4, 60, 24, 4)
     .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
     .addDropDown('Stroke Color', Object.keys(colors))
     .addDropDown('Background Color', Object.keys(colors), (c) => {

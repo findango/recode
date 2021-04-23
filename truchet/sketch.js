@@ -7,14 +7,6 @@ const margin = 40;
 
 let random;
 
-// random number generator with seed
-const mulberry32 = (seed) => () => {
-    let t = (seed += 0x6d2b79f5);
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-};
-
 // A simple cross
 const cross = (w, h) => {
     const g = new Rune.Group();
@@ -119,8 +111,7 @@ settings
     .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
     .addDropDown('Stroke Color', Object.keys(colors))
     .addDropDown('Background Color', Object.keys(colors), (c) => {
-        document.getElementById('sketch').style.backgroundColor =
-            colors[c.value] || '#ffffff';
+        document.getElementById('sketch').style.backgroundColor = colors[c.value] || '#ffffff';
     });
 
 // FIXME not ideal
