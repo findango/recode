@@ -23,7 +23,7 @@ const lines = (w, h) => {
 const corner = (w, h) => {
     return new Rune.Path(0, 0)
         .moveTo(w, 0)
-        .curveTo(w, h, 0, h) //
+        .curveTo(w * 0.95, h * 0.95, 0, h) //
         .fill('none')
         .stroke(false)
         .strokeCap('butt');
@@ -58,12 +58,35 @@ const diamond = (w, h) => {
     return g;
 };
 
-const sketchDiv = document.getElementById('sketch').getBoundingClientRect();
-const settings = QuickSettings.create(
-    sketchDiv.left + width + 2 * margin + 40,
-    sketchDiv.top,
-    'Settings',
-);
+// Different distributions of tile types across the grid.
+const distributions = {
+    random: () =>
+        pick([
+            [0.5, lines],
+            [0.5, corners],
+        ]),
+    vertical: ({ row, rows }) => {
+        const y = row / rows;
+        return pick([
+            [invert(d3.easeQuadInOut(y)), lines],
+            [d3.easeQuadInOut(y), corners],
+        ]);
+    },
+    horizontal: ({ col, columns }) => {
+        const x = col / columns;
+        return pick([
+            [invert(d3.easeQuadInOut(x)), lines],
+            [d3.easeQuadInOut(x), corners],
+        ]);
+    },
+    radial: ({ row, col, rows, columns }) => {
+        const r = (Math.min(rows, columns) * 0.8) / 2;
+        const cx = columns / 2 + 0.5;
+        const cy = rows / 2 + 0.5;
+        const dist = Math.hypot(cx - col, cy - row);
+        return dist < r ? corners : lines;
+    },
+};
 
 const render = () => {
     document.getElementById('sketch').innerHTML = '';
@@ -89,17 +112,20 @@ const render = () => {
 
     const stroke = colors[settings.getValue('Stroke Color').value];
     const strokeWidth = settings.getValue('Stroke Width');
+    const pickTileConstrained = distributions[settings.getValue('Distribution').value];
 
-    forEachCell(grid, ({ w, h }) => {
+    forEachCell(grid, ({ row, col, w, h }) => {
+        const tile = pickTileConstrained({
+            row,
+            col,
+            rows: grid.state.rows,
+            columns: grid.state.columns,
+        });
         const angle = pick([
             [1, 0],
             [1, 90],
             [1, 180],
             [1, 270],
-        ]);
-        const tile = pick([
-            [1, lines],
-            [1, corners],
         ]);
         if (tile) {
             return tile(w, h)
@@ -113,7 +139,7 @@ const render = () => {
     randomCells(grid, ({ row, col, w, h }) => {
         if (row > 1 && col > 1 && row % 2 && col % 2) {
             return cross(w, h)
-                .stroke(colors.gold_crayola)
+                .stroke(colors[settings.getValue('Ornament Color').value])
                 .strokeWidth(strokeWidth)
                 .strokeCap('butt');
         }
@@ -122,7 +148,12 @@ const render = () => {
     r.draw();
 };
 
-settings
+const sketchDiv = document.getElementById('sketch').getBoundingClientRect();
+const settings = QuickSettings.create(
+    sketchDiv.left + width + 2 * margin + 40,
+    sketchDiv.top,
+    'Settings',
+)
     .setGlobalChangeHandler(render)
     .addText('Seed', '12345')
     .addRange('Grid', 4, 60, 24, 4)
@@ -130,10 +161,15 @@ settings
     .addDropDown('Stroke Color', Object.keys(colors))
     .addDropDown('Background Color', Object.keys(colors), (c) => {
         document.getElementById('sketch').style.backgroundColor = colors[c.value] || '#ffffff';
-    });
+    })
+    .addDropDown('Ornament Color', Object.keys(colors))
+    .addDropDown('Distribution', Object.keys(distributions));
 
-// FIXME not ideal
-settings.setValue('Stroke Color', Object.keys(colors).indexOf('emerald_green'));
-settings.setValue('Background Color', Object.keys(colors).indexOf('forest_green'));
+// defaults
+settings
+    .setValue('Stroke Color', Object.keys(colors).indexOf('emerald_green'))
+    .setValue('Background Color', Object.keys(colors).indexOf('forest_green'))
+    .setValue('Ornament Color', Object.keys(colors).indexOf('none'))
+    .setValue('Distribution', Object.keys(distributions).indexOf('radial'));
 
 render();
