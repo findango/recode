@@ -132,6 +132,7 @@ const render = () => {
         }
     });
 
+    if (settings.getValue('Ornament Color').value !== 'none') {
     randomCells(grid, ({ row, col, w, h }) => {
         if (row > 1 && col > 1 && row % 2 && col % 2) {
             return cross(w, h)
@@ -140,6 +141,7 @@ const render = () => {
                 .strokeCap('butt');
         }
     });
+    }
 
     r.draw();
 };
@@ -166,6 +168,6 @@ settings
     .setValue('Stroke Color', Object.keys(colors).indexOf('emerald_green'))
     .setValue('Background Color', Object.keys(colors).indexOf('forest_green'))
     .setValue('Ornament Color', Object.keys(colors).indexOf('none'))
-    .setValue('Distribution', Object.keys(distributions).indexOf('radial'));
+    .setValue('Distribution', Object.keys(distributions).indexOf('random'));
 
 render();
