@@ -86,11 +86,14 @@ const distributions = {
     },
 };
 
+let seed;
+let r;
 const render = () => {
-    Math.seedrandom(settings.getValue('Seed').trim(), { global: true });
+    seed = settings.getValue('Seed').trim();
+    Math.seedrandom(seed, { global: true });
 
     document.getElementById('sketch').innerHTML = '';
-    const r = new Rune({
+    r = new Rune({
         container: '#sketch',
         width: width + 2 * margin,
         height: height + 2 * margin,
@@ -161,7 +164,10 @@ const settings = QuickSettings.create(
         document.getElementById('sketch').style.backgroundColor = colors[c.value] || '#ffffff';
     })
     .addDropDown('Ornament Color', Object.keys(colors))
-    .addDropDown('Distribution', Object.keys(distributions));
+    .addDropDown('Distribution', Object.keys(distributions))
+    .addButton('Save file', () => {
+        r.save(`truchet-${seed}.svg`);
+    });
 
 // defaults
 settings
