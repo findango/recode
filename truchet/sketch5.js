@@ -133,14 +133,14 @@ const render = () => {
     });
 
     if (settings.getValue('Ornament Color').value !== 'none') {
-    randomCells(grid, ({ row, col, w, h }) => {
-        if (row > 1 && col > 1 && row % 2 && col % 2) {
-            return cross(w, h)
-                .stroke(colors[settings.getValue('Ornament Color').value])
-                .strokeWidth(strokeWidth)
-                .strokeCap('butt');
-        }
-    });
+        randomCells(grid, ({ row, col, w, h }) => {
+            if (row > 1 && col > 1 && row % 2 && col % 2) {
+                return cross(w, h)
+                    .stroke(colors[settings.getValue('Ornament Color').value])
+                    .strokeWidth(strokeWidth)
+                    .strokeCap('butt');
+            }
+        });
     }
 
     r.draw();
@@ -153,7 +153,7 @@ const settings = QuickSettings.create(
     'Settings',
 )
     .setGlobalChangeHandler(render)
-    .addText('Seed', Date.now())
+    .addText('Seed', new Date().format('yyyymmdd'))
     .addRange('Grid', 4, 60, 24, 4)
     .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
     .addDropDown('Stroke Color', Object.keys(colors))
