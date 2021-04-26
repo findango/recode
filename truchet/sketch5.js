@@ -102,6 +102,10 @@ const render = () => {
         debug: false,
     });
 
+    r.rect(0, 0, r.width, r.height)
+        .stroke('none')
+        .fill(colors[settings.getValue('Background Color').value]);
+
     const grid = r.grid({
         x: margin,
         y: margin,
@@ -163,9 +167,7 @@ const settings = QuickSettings.create(
     .addRange('Density', 1, 12, 4)
     .addDropDown('Distribution', Object.keys(distributions))
     .addDropDown('Stroke Color', Object.keys(colors))
-    .addDropDown('Background Color', Object.keys(colors), (c) => {
-        document.getElementById('sketch').style.backgroundColor = colors[c.value] || '#ffffff';
-    })
+    .addDropDown('Background Color', Object.keys(colors))
     .addDropDown('Ornament Color', Object.keys(colors))
     .addButton('Save file', () => {
         r.save(`truchet-${seed}.svg`);
