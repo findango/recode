@@ -6,13 +6,13 @@ const height = 960;
 const margin = 60;
 
 const line = (w, h) => {
-    return new Rune.Line(w, 0, w, h).stroke(false).strokeCap('butt');
+    return new Rune.Line(w, 0, w, h).stroke(false).strokeCap('square');
 };
 
-const lines = (w, h) => {
+const lines = (w, h, count = 4) => {
     const g = new Rune.Group();
-    for (let i = 0; i <= 4; i++) {
-        const l = line((w * i) / 4, h);
+    for (let i = 0; i <= count; i++) {
+        const l = line((w * i) / count, h);
         g.add(l);
     }
     return g;
@@ -21,20 +21,22 @@ const lines = (w, h) => {
 const corner = (w, h) => {
     return new Rune.Path(0, 0)
         .moveTo(w, 0)
-        .curveTo(w * 0.95, h * 0.95, 0, h) //
+        .curveTo(w, h, 0, h)
         .fill('none')
         .stroke(false)
-        .strokeCap('butt');
+        .strokeCap('square');
 };
 
-const corners = (w, h) => {
+const corners = (w, h, count = 4) => {
     const g = new Rune.Group();
-    for (let i = 0; i <= 4; i++) {
-        const c = corner((w * i) / 4, (h * i) / 4);
+    for (let i = 1; i <= count; i++) {
+        const c = corner((w * i) / count, (h * i) / count);
         g.add(c);
     }
-    const miniCorner = corner(w / 4, h / 4).rotate(180, w / 2, h / 2);
-    g.add(miniCorner);
+    for (let j = 1; j <= Math.floor(count / 3); j++) {
+        const miniCorner = corner((j * w) / count, (j * h) / count).rotate(180, w / 2, h / 2);
+        g.add(miniCorner);
+    }
     return g;
 };
 
@@ -127,10 +129,9 @@ const render = () => {
             [1, 270],
         ]);
         if (tile) {
-            return tile(w, h)
+            return tile(w, h, settings.getValue('Density'))
                 .stroke(stroke)
                 .strokeWidth(strokeWidth)
-                .strokeCap('round')
                 .rotate(angle, w / 2, h / 2);
         }
     });
@@ -159,12 +160,13 @@ const settings = QuickSettings.create(
     .addText('Seed', new Date().format('yyyymmdd'))
     .addRange('Grid', 4, 60, 24, 4)
     .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
+    .addRange('Density', 1, 12, 4)
+    .addDropDown('Distribution', Object.keys(distributions))
     .addDropDown('Stroke Color', Object.keys(colors))
     .addDropDown('Background Color', Object.keys(colors), (c) => {
         document.getElementById('sketch').style.backgroundColor = colors[c.value] || '#ffffff';
     })
     .addDropDown('Ornament Color', Object.keys(colors))
-    .addDropDown('Distribution', Object.keys(distributions))
     .addButton('Save file', () => {
         r.save(`truchet-${seed}.svg`);
     });
@@ -175,5 +177,11 @@ settings
     .setValue('Background Color', Object.keys(colors).indexOf('forest_green'))
     .setValue('Ornament Color', Object.keys(colors).indexOf('none'))
     .setValue('Distribution', Object.keys(distributions).indexOf('random'));
+
+try {
+    settings.saveInLocalStorage('truchet5');
+} catch (error) {
+    // maybe clean up
+}
 
 render();
