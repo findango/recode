@@ -169,8 +169,10 @@ const settings = QuickSettings.create(
     .addDropDown('Stroke Color', Object.keys(colors))
     .addDropDown('Background Color', Object.keys(colors))
     .addDropDown('Ornament Color', Object.keys(colors))
+    .addDropDown('File format', ['svg', 'png', 'jpeg'])
     .addButton('Save file', () => {
-        r.save(`truchet-${seed}.svg`);
+        const format = settings.getValue('File format').value;
+        r.save(`truchet-${seed}.${format}`);
     });
 
 // defaults
