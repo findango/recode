@@ -1,8 +1,8 @@
 body {
     background-color: whitesmoke;
     margin: 40px 80px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
+        Geneva, Verdana, sans-serif;
 }
 
 .layout {
@@ -11,6 +11,7 @@ body {
 
 #sketch {
     background-color: #fff;
+    height: 0; /* weird 3px gap at the bottom for unknown reason */
 }
 
 #controls {
