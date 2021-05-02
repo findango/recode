@@ -88,11 +88,21 @@ const distributions = {
     },
 };
 
-let seed;
+const settings = {
+    seed: new Date().format('yyyymmdd'),
+    grid: 24,
+    density: 4,
+    distribution: 'random',
+    multiScale: true,
+    strokeWidth: 1.5,
+    strokeColor: colors.gunmetal,
+    backgroundColor: colors.slate,
+    format: 'svg',
+};
+
 let r;
 const render = () => {
-    seed = settings.getValue('Seed').trim();
-    Math.seedrandom(seed, { global: true });
+    Math.seedrandom(settings.seed.trim(), { global: true });
 
     document.getElementById('sketch').innerHTML = '';
     r = new Rune({
@@ -102,17 +112,15 @@ const render = () => {
         debug: false,
     });
 
-    r.rect(0, 0, r.width, r.height)
-        .stroke('none')
-        .fill(colors[settings.getValue('Background Color').value]);
+    r.rect(0, 0, r.width, r.height).stroke('none').fill(settings.backgroundColor);
 
     const grid = r.grid({
         x: margin,
         y: margin,
         width: width,
         height: height,
-        columns: settings.getValue('Grid'),
-        rows: (settings.getValue('Grid') * 5) / 4,
+        columns: settings.grid,
+        rows: (settings.grid * 5) / 4,
     });
 
     const bigGrid = r.grid({
@@ -124,106 +132,90 @@ const render = () => {
         rows: grid.state.rows / 4,
     });
 
-    const stroke = colors[settings.getValue('Stroke Color').value];
-    const strokeWidth = settings.getValue('Stroke Width');
-    const pickTileConstrained = distributions[settings.getValue('Distribution').value];
+    const pickTileConstrained = distributions[settings.distribution];
 
-    randomCells(bigGrid, ({ row, col, w, h }) => {
-        const tile = pickTileConstrained({
-            row,
-            col,
-            rows: grid.state.rows,
-            columns: grid.state.columns,
-        });
-        const angle = pick([
-            [1, 0],
-            [1, 90],
-            [1, 180],
-            [1, 270],
-        ]);
-        if (tile) {
-            return tile(w, h, settings.getValue('Density') * 4)
-                .stroke(stroke)
-                .strokeWidth(strokeWidth)
-                .rotate(angle, w / 2, h / 2);
-        }
-    });
-
-    forEachCell(grid, ({ row, col, w, h }) => {
-        const bigCell = bigGrid.getModule(Math.ceil(col / 4), Math.ceil(row / 4));
-        if (bigCell.children.length > 0) return;
-
-        const tile = pickTileConstrained({
-            row,
-            col,
-            rows: grid.state.rows,
-            columns: grid.state.columns,
-        });
-        // const angle = pick([0, 90, 180, 270]);
-        const angle = pick([
-            [1, 0],
-            [1, 90],
-            [1, 180],
-            [1, 270],
-        ]);
-        if (tile) {
-            return tile(w, h, settings.getValue('Density'))
-                .stroke(stroke)
-                .strokeWidth(strokeWidth)
-                .rotate(angle, w / 2, h / 2);
-        }
-    });
-
-    if (settings.getValue('Ornament Color').value !== 'none') {
-        randomCells(grid, ({ row, col, w, h }) => {
-            if (row > 1 && col > 1 && row % 2 && col % 2) {
-                return cross(w, h)
-                    .stroke(colors[settings.getValue('Ornament Color').value])
-                    .strokeWidth(strokeWidth)
-                    .strokeCap('butt');
+    if (settings.multiScale) {
+        randomCells(bigGrid, ({ row, col, w, h }) => {
+            const tile = pickTileConstrained({
+                row,
+                col,
+                rows: bigGrid.state.rows,
+                columns: bigGrid.state.columns,
+            });
+            const angle = pick([
+                [1, 0],
+                [1, 90],
+                [1, 180],
+                [1, 270],
+            ]);
+            if (tile) {
+                return tile(w, h, settings.density * 4)
+                    .stroke(settings.strokeColor)
+                    .strokeWidth(settings.strokeWidth)
+                    .rotate(angle, w / 2, h / 2);
             }
         });
     }
 
+    forEachCell(grid, ({ row, col, w, h }) => {
+        if (settings.multiScale) {
+            const bigCell = bigGrid.getModule(Math.ceil(col / 4), Math.ceil(row / 4));
+            if (bigCell.children.length > 0) return;
+        }
+        const tile = pickTileConstrained({
+            row,
+            col,
+            rows: grid.state.rows,
+            columns: grid.state.columns,
+        });
+        const angle = pick([
+            [1, 0],
+            [1, 90],
+            [1, 180],
+            [1, 270],
+        ]);
+        if (tile) {
+            return tile(w, h, settings.density)
+                .stroke(settings.strokeColor)
+                .strokeWidth(settings.strokeWidth)
+                .rotate(angle, w / 2, h / 2);
+        }
+    });
+
     r.draw();
 };
 
-const sketchDiv = document.getElementById('sketch').getBoundingClientRect();
-const settings = QuickSettings.create(
-    sketchDiv.left + width + 2 * margin + 40,
-    sketchDiv.top,
-    'Settings',
-)
-    .addText('Seed')
-    .addRange('Grid', 4, 60, 24, 4)
-    .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
-    .addRange('Density', 1, 12, 4)
-    .addDropDown('Distribution', Object.keys(distributions))
-    .addDropDown('Stroke Color', Object.keys(colors))
-    .addDropDown('Background Color', Object.keys(colors))
-    .addDropDown('Ornament Color', Object.keys(colors))
-    .addDropDown('File format', ['svg', 'png', 'jpg'])
-    .addButton('Save file', () => {
-        const format = settings.getValue('File format').value;
-        r.save(`truchet-${seed}.${format}`);
-    });
+const pane = new Tweakpane({
+    container: document.getElementById('controls'),
+});
 
-// defaults
-settings
-    .setValue('Stroke Color', Object.keys(colors).indexOf('emerald_green'))
-    .setValue('Background Color', Object.keys(colors).indexOf('forest_green'))
-    .setValue('Ornament Color', Object.keys(colors).indexOf('none'))
-    .setValue('Distribution', Object.keys(distributions).indexOf('random'));
+pane.addInput(settings, 'seed', { input: 'string' });
+pane.addInput(settings, 'grid', { min: 4, max: 36, step: 4 });
+pane.addInput(settings, 'density', { min: 1, max: 12, step: 1 });
+pane.addInput(settings, 'multiScale', { label: 'multi-scale?' });
+pane.addInput(settings, 'distribution', {
+    options: optionsList(Object.keys(distributions)),
+});
 
-// enable this after changing settings to avoid re-renders
-settings.setGlobalChangeHandler(render);
+pane.addSeparator();
+pane.addInput(settings, 'strokeWidth', { min: 0.5, max: 15, step: 0.5 });
+pane.addInput(settings, 'strokeColor', { picker: 'inline' });
+pane.addInput(settings, 'backgroundColor', { label: 'background', picker: 'inline' });
+pane.addButton({ label: '', title: 'Swap colors' }).on('click', () => {
+    const tmp = settings.strokeColor;
+    settings.strokeColor = settings.backgroundColor;
+    settings.backgroundColor = tmp;
+    pane.refresh();
+});
 
-try {
-    settings.saveInLocalStorage('truchet5');
-    // default the seed to today's date if blank
-    if (settings.getValue('Seed').trim() === '') {
-        settings.setValue('Seed', new Date().format('yyyymmdd'));
-    }
-} catch (error) {}
+pane.addSeparator();
+pane.addInput(settings, 'format', {
+    options: optionsList(['svg', 'png', 'jpg']),
+});
+pane.addButton({ label: '', title: 'Save' }).on('click', () => {
+    r.save(`truchet-${settings.seed}.${settings.format}`);
+});
+
+pane.on('change', render);
 
 render();

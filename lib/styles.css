@@ -16,5 +16,6 @@ body {
 
 #controls {
     flex-grow: 1;
-    margin-left: 20px;
+    max-width: 300px;
+    margin-left: 40px;
 }
