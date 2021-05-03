@@ -190,6 +190,18 @@ const pane = new Tweakpane({
 });
 
 pane.addInput(settings, 'seed', { input: 'string' });
+pane.addButton({ label: '', title: 'bump' }).on('click', () => {
+    const seed = settings.seed.split('-');
+    const version = Number.parseInt(seed[1] || 0) + 1;
+    settings.seed = `${seed[0]}-${version}`;
+    pane.refresh();
+});
+pane.addButton({ label: '', title: 'un-bump' }).on('click', () => {
+    const seed = settings.seed.split('-');
+    const version = Number.parseInt(seed[1] || 1) - 1;
+    settings.seed = `${seed[0]}${version ? '-' + version : ''}`;
+    pane.refresh();
+});
 pane.addInput(settings, 'grid', { min: 4, max: 36, step: 4 });
 pane.addInput(settings, 'density', { min: 1, max: 12, step: 1 });
 pane.addInput(settings, 'multiScale', { label: 'multi-scale?' });
