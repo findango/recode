@@ -160,8 +160,7 @@ const settings = QuickSettings.create(
     sketchDiv.top,
     'Settings',
 )
-    .setGlobalChangeHandler(render)
-    .addText('Seed', new Date().format('yyyymmdd'))
+    .addText('Seed')
     .addRange('Grid', 4, 60, 24, 4)
     .addRange('Stroke Width', 0.5, 25, 1.5, 0.5)
     .addRange('Density', 1, 12, 4)
@@ -169,7 +168,7 @@ const settings = QuickSettings.create(
     .addDropDown('Stroke Color', Object.keys(colors))
     .addDropDown('Background Color', Object.keys(colors))
     .addDropDown('Ornament Color', Object.keys(colors))
-    .addDropDown('File format', ['svg', 'png', 'jpeg'])
+    .addDropDown('File format', ['svg', 'png', 'jpg'])
     .addButton('Save file', () => {
         const format = settings.getValue('File format').value;
         r.save(`truchet-${seed}.${format}`);
@@ -182,10 +181,15 @@ settings
     .setValue('Ornament Color', Object.keys(colors).indexOf('none'))
     .setValue('Distribution', Object.keys(distributions).indexOf('random'));
 
+// enable this after changing settings to avoid re-renders
+settings.setGlobalChangeHandler(render);
+
 try {
     settings.saveInLocalStorage('truchet5');
-} catch (error) {
-    // maybe clean up
+    // default the seed to today's date if blank
+    if (settings.getValue('Seed').trim() === '') {
+        settings.setValue('Seed', new Date().format('yyyymmdd'));
 }
+} catch (error) {}
 
 render();

@@ -1,8 +1,8 @@
 body {
     background-color: whitesmoke;
     margin: 40px 80px;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
-        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode',
+        Geneva, Verdana, sans-serif;
 }
 
 .layout {
@@ -11,9 +11,11 @@ body {
 
 #sketch {
     background-color: #fff;
+    height: 0; /* weird 3px gap at the bottom for unknown reason */
 }
 
 #controls {
     flex-grow: 1;
-    margin-left: 20px;
+    max-width: 300px;
+    margin-left: 40px;
 }
