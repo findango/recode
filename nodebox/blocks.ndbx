@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ndbx formatVersion="21" type="file" uuid="d1e7b887-7fb5-44bf-a1c7-0281a63b28ed">
+    <property name="canvasHeight" value="1000"/>
+    <property name="canvasWidth" value="1000"/>
+    <property name="canvasX" value="0"/>
+    <property name="canvasY" value="0"/>
+    <node name="root" prototype="core.network" renderedChild="combine1">
+        <node position="2.00,1.00" prototype="color.color">
+            <port name="color" type="color" value="#ef0083ff"/>
+        </node>
+        <node name="combine1" position="4.00,10.00" prototype="list.combine"/>
+        <node name="count1" position="6.00,5.00" prototype="list.count"/>
+        <node name="grid1" position="4.00,3.00" prototype="corevector.grid">
+            <port name="columns" type="int" value="3"/>
+            <port name="rows" type="int" value="3"/>
+            <port name="width" type="float" value="205.0"/>
+            <port name="height" type="float" value="205.0"/>
+        </node>
+        <node name="random_numbers1" position="6.00,6.00" prototype="math.random_numbers">
+            <port name="seed" type="int" value="12"/>
+        </node>
+        <node name="seed" position="6.00,1.00" prototype="math.number">
+            <port name="value" type="float" value="12.0"/>
+        </node>
+        <node name="textpath1" position="7.00,8.00" prototype="corevector.textpath">
+            <port name="text" type="string" value="Hofmann-esque"/>
+            <port name="font_name" type="string" value="Helvetica"/>
+            <port name="font_size" type="float" value="14.0"/>
+            <port name="position" type="point" value="-100.00,180.00"/>
+        </node>
+        <node name="tile" position="4.00,8.00" prototype="core.network" renderedChild="colorize1">
+            <node name="colorize1" position="-2.00,8.00" prototype="corevector.colorize"/>
+            <node name="grid1" position="2.00,-1.00" prototype="corevector.grid">
+                <port name="columns" type="int" value="3"/>
+                <port name="rows" type="int" value="3"/>
+                <port name="width" type="float" value="60.0"/>
+                <port name="height" type="float" value="60.0"/>
+            </node>
+            <node name="pick1" position="2.00,3.00" prototype="list.pick"/>
+            <node name="random_numbers1" position="3.00,1.00" prototype="math.random_numbers">
+                <port name="amount" type="int" value="1"/>
+                <port name="start" type="float" value="3.0"/>
+                <port name="end" type="float" value="7.0"/>
+            </node>
+            <node name="rect1" position="2.00,4.00" prototype="corevector.rect">
+                <port name="width" type="float" value="31.0"/>
+                <port name="height" type="float" value="31.0"/>
+            </node>
+            <node name="seed" position="7.00,-1.00" prototype="math.number"/>
+            <node name="translate1" position="0.00,6.00" prototype="corevector.translate"/>
+            <port childReference="translate1.translate" description="The amount of translation." label="" name="position" range="value" type="point" value="0.00,0.00" widget="point"/>
+            <port childReference="colorize1.fill" description="The new fill color. Set alpha to 0 for no fill." label="" name="color" range="value" type="color" value="#ef0083ff" widget="color"/>
+            <port childReference="seed.value" description="" label="" name="seed" range="value" type="float" value="0.0" widget="float"/>
+            <conn input="pick1.list" output="grid1"/>
+            <conn input="rect1.position" output="pick1"/>
+            <conn input="pick1.amount" output="random_numbers1"/>
+            <conn input="translate1.shape" output="rect1"/>
+            <conn input="colorize1.shape" output="translate1"/>
+            <conn input="random_numbers1.seed" output="seed"/>
+            <conn input="pick1.seed" output="seed"/>
+        </node>
+        <conn input="tile.position" output="grid1"/>
+        <conn input="count1.list" output="grid1"/>
+        <conn input="random_numbers1.amount" output="count1"/>
+        <conn input="tile.seed" output="random_numbers1"/>
+        <conn input="combine1.list1" output="tile"/>
+        <conn input="combine1.list2" output="textpath1"/>
+        <conn input="tile.color" output="color"/>
+        <conn input="random_numbers1.seed" output="seed"/>
+    </node>
+</ndbx>
