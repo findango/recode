@@ -21,7 +21,7 @@
         b: 0,
         c: 0,
         d: 0,
-        e: 0,
+        e: false,
         pads: '',
     }
 
@@ -31,7 +31,7 @@
     pane.addInput(settings, 'b', { min: 0, max: 127, step: 1 });
     pane.addInput(settings, 'c', { min: 0, max: 127, step: 1 });
     pane.addInput(settings, 'd', { min: 0, max: 127, step: 1 });
-    pane.addInput(settings, 'e', { min: 0, max: 127, step: 1 });
+    pane.addInput(settings, 'e');
     pane.addMonitor(settings, 'pads');
 
     const midi = bindMidi(pane, settings, {
@@ -46,12 +46,9 @@
             39: 'd',
             43: 'e',
         },
-        onKeyDown: (key) => {
-            settings.pads = `${key.number} - ${key.name} - ${key.rawVelocity}`;
-        },
-        onKeyUp: (key) => {
-            settings.pads = '';
-        },
+        onConnect: (input) => settings.device = input.name,
+        onKeyDown: (key) => settings.pads = `${key.number} - ${key.name} - ${key.rawVelocity}`,
+        onKeyUp: (key) => settings.pads = '',
     });
 </script>
 
