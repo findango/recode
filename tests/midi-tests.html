@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utils</title>
+    <script type="text/javascript" src="../lib/rune.js"></script>
+    <script type="text/javascript" src="../lib/webmidi.min.js"></script>
+    <script type="text/javascript" src="../lib/tweakpane-2.4.3.min.js"></script>
+    <script type="text/javascript" src="../lib/utils.js"></script>
+    <script type="text/javascript" src="../lib/midi.js"></script>
+</head>
+
+<body>
+</body>
+<script type="text/javascript">
+    const settings = {
+        device: 'not connected',
+        a: 0,
+        b: 0,
+        c: 0,
+        d: 0,
+        e: 0,
+        pads: '',
+    }
+
+    const pane = new Tweakpane();
+    pane.addMonitor(settings, 'device');
+    pane.addInput(settings, 'a', { min: 0, max: 127, step: 1 });
+    pane.addInput(settings, 'b', { min: 0, max: 127, step: 1 });
+    pane.addInput(settings, 'c', { min: 0, max: 127, step: 1 });
+    pane.addInput(settings, 'd', { min: 0, max: 127, step: 1 });
+    pane.addInput(settings, 'e', { min: 0, max: 127, step: 1 });
+    pane.addMonitor(settings, 'pads');
+
+    const midi = bindMidi(pane, settings, {
+        input: 0,
+        channel: 1,
+        knobs: {
+            1: 'a',
+            2: 'b',
+            3: 'c',
+        },
+        keys: {
+            39: 'd',
+            43: 'e',
+        },
+        onKeyDown: (key) => {
+            settings.pads = `${key.number} - ${key.name} - ${key.rawVelocity}`;
+        },
+        onKeyUp: (key) => {
+            settings.pads = '';
+        },
+    });
+</script>
+
+</html>
