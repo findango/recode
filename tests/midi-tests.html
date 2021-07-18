@@ -40,7 +40,10 @@
         knobs: {
             1: 'a',
             2: 'b',
-            3: 'c',
+            3: (e) => {
+                settings['c'] = e.value;
+                pane.refresh();
+            },
         },
         keys: {
             39: 'd',
