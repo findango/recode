@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ndbx formatVersion="21" type="file" uuid="8c104b3a-80a2-4443-8afd-63af321324cf">
+    <property name="canvasHeight" value="1000"/>
+    <property name="canvasWidth" value="1000"/>
+    <property name="canvasX" value="0"/>
+    <property name="canvasY" value="0"/>
+    <node name="root" prototype="core.network" renderedChild="colorize1">
+        <node name="colorize1" position="2.00,9.00" prototype="corevector.colorize">
+            <port name="fill" type="color" value="#e80000ff"/>
+        </node>
+        <node name="convert_range1" position="6.00,4.00" prototype="math.convert_range">
+            <port name="source_end" type="float" value="600.0"/>
+        </node>
+        <node name="divide1" position="2.00,4.00" prototype="math.divide">
+            <port name="value2" type="float" value="24.0"/>
+        </node>
+        <node name="ellipse1" position="2.00,6.00" prototype="corevector.ellipse"/>
+        <node name="grid1" position="0.00,0.00" prototype="corevector.grid">
+            <port name="columns" type="int" value="16"/>
+            <port name="rows" type="int" value="16"/>
+            <port name="position" type="point" value="0.00,300.00"/>
+        </node>
+        <node name="hsb_color1" position="6.00,7.00" prototype="color.hsb_color">
+            <port name="hue" type="float" value="277.0"/>
+            <port name="saturation" type="float" value="255.0"/>
+            <port name="brightness" type="float" value="219.0"/>
+        </node>
+        <node name="lookup1" position="4.00,2.00" prototype="data.lookup">
+            <port name="key" type="string" value="y"/>
+        </node>
+        <node name="multiply1" position="6.00,5.00" prototype="math.multiply">
+            <port name="value2" type="float" value="255.0"/>
+        </node>
+        <conn input="ellipse1.position" output="grid1"/>
+        <conn input="ellipse1.width" output="divide1"/>
+        <conn input="ellipse1.height" output="divide1"/>
+        <conn input="colorize1.shape" output="ellipse1"/>
+        <conn input="multiply1.value1" output="convert_range1"/>
+        <conn input="hsb_color1.hue" output="multiply1"/>
+        <conn input="colorize1.fill" output="hsb_color1"/>
+        <conn input="lookup1.list" output="grid1"/>
+        <conn input="divide1.value1" output="lookup1"/>
+        <conn input="convert_range1.value" output="lookup1"/>
+    </node>
+</ndbx>
