@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hofmann</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="../lib/rune.js"></script>
+    <script type="text/javascript" src="../lib/rune.save.js"></script>
+    <script type="text/javascript" src="../lib/rune.noise.js"></script>
+    <script type="text/javascript" src="../lib/seedrandom.min.js"></script>
+    <script type="text/javascript" src="../lib/utils.js"></script>
+    <link type="text/css" rel="stylesheet" href="../lib/styles.css" />
+</head>
+
+<body>
+    <h1>Hofmann</h1>
+    <div class="layout">
+        <div id="sketch"></div>
+        <div id="controls"></div>
+    </div>
+    <script type="text/javascript">
+        const width = 480;
+        const height = 480;
+        const margin = 80;
+
+        const seed = window.location.search
+            ? window.location.search.slice(1)
+            : Math.floor(Rune.random(10000000, 99999999));
+        Math.seedrandom(`${seed}`, { global: true });
+
+        const r = new Rune({
+            container: '#sketch',
+            width: width + 2 * margin,
+            height: height + 2.25 * margin,
+        });
+        background(r, colors.slate);
+        const grid = r.grid({
+            x: margin,
+            y: margin,
+            width,
+            height,
+            rows: 3,
+            columns: 3,
+            gutter: 20
+        });
+
+        forEachCell(grid, ({ w, h }) => {
+            const tile = new Rune.Group();
+            const count = Math.round(Rune.random(5, 7))
+            const squares = pickN(count, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+            squares.forEach(s => {
+                const x = (s % 3) * (w / 3);
+                const y = Math.floor(s / 3) * (h / 3);
+                r.rect(x, y, w / 3, h / 3, tile).stroke(colors.deep_blue).fill(colors.deep_blue);
+            });
+            return tile;
+        });
+
+        r.text(seed, margin, margin + height + margin / 2)
+            .fontFamily('Menlo')
+            .fontSize(14)
+            .letterSpacing(1.0)
+            .stroke('none')
+            .fill(colors.deep_blue);
+
+        r.draw();
+    </script>
+</body>
+
+</html>
