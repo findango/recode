@@ -123,9 +123,12 @@ WebMidi.enable((err) => {
         console.log('Error starting WebMidi: ', err);
         return;
     }
-    console.log('Hello MIDI World.');
 
     const input = WebMidi.inputs[0];
+    if (!input) {
+        console.log('Not able to find a MIDI input');
+        return;
+    }
     console.log(input.name, 'connected!');
 
     input.addListener('controlchange', '1', (event) => {
