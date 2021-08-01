@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Growth 3</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="../lib/rune.js"></script>
+    <script type="text/javascript" src="../lib/rune.save.js"></script>
+    <script type="text/javascript" src="../lib/rune.noise.js"></script>
+    <script type="text/javascript" src="../lib/seedrandom.min.js"></script>
+    <script type="text/javascript" src="../lib/d3.min.js"></script>
+    <script type="text/javascript" src="../lib/utils.js"></script>
+    <link type="text/css" rel="stylesheet" href="../lib/styles.css" />
+</head>
+
+<body>
+    <h1>Growth 3</h1>
+    <div class="layout">
+        <div id="sketch"></div>
+        <div id="controls"></div>
+    </div>
+    <script type="text/javascript">
+        const width = 480;
+        const height = 480;
+        const margin = 80;
+        const TAU = Math.PI * 2;
+
+        const seed = window.location.search
+            ? window.location.search.slice(1)
+            : Math.floor(Rune.random(10000000, 99999999));
+        Math.seedrandom(`${seed}`, { global: true });
+
+        const r = new Rune({
+            container: '#sketch',
+            width: width + 2 * margin,
+            height: height + 2 * margin,
+        });
+        background(r, colors.slate);
+        const canvas = r.group(margin + width / 2, margin + height / 2);
+        const noise = new Rune.Noise();
+
+        let ys = Array(100).fill(260);
+        for (let i = 0; i < 25; i++) {
+            ys = ys.map((y, idx) => y - 5 * noise.get(idx / 20, i / 5));
+            const p = r.path(0, 0, canvas).strokeWidth(1).stroke(colors.deep_blue).fill('none');
+            const off = Math.random() * TAU;
+            ys.forEach((radius, idx) => {
+                const x = Math.cos(idx * TAU / 99) * radius;
+                const y = Math.sin(idx * TAU / 99) * radius;
+                if (idx === 0) {
+                    p.moveTo(x, y);
+                } else {
+                    p.lineTo(x, y);
+                }
+            })
+        }
+        r.line(260, 0, ys[99], 0, canvas).strokeWidth(1.5).stroke(colors.gold_crayola).fill('none');
+        r.draw();
+    </script>
+</body>
+
+</html>
