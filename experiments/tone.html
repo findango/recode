@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tone</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="text/javascript" src="../lib/rune.js"></script>
+    <script type="text/javascript" src="../lib/rune.save.js"></script>
+    <script type="text/javascript" src="../lib/utils.js"></script>
+    <link type="text/css" rel="stylesheet" href="../lib/styles.css" />
+</head>
+
+<body>
+    <h1>Tone</h1>
+    <div class="layout">
+        <div id="sketch"></div>
+        <div id="controls"></div>
+    </div>
+    <script type="text/javascript">
+        const width = 480;
+        const height = 480;
+        const margin = 80;
+
+        const r = new Rune({
+            container: '#sketch',
+            width: width + 2 * margin,
+            height: height + 2 * margin,
+        });
+        background(r, colors.slate);
+        const canvas = r.group(margin, margin);
+
+        for (i = 0; i < 4; i++) {
+            const w = width * (5 - i) / 5;
+            const h = height * (5 - i) / 5;
+            const g = r.group(margin, margin);
+
+            // this renders a bunch of concentric circles, rather than different sized dots,
+            // so it can be drawn with a pen plotter (very slowly)
+            for (let y = height - h; y < height; y += 4) {
+                for (let x = width - w; x < width; x += 4) {
+                    r.circle(x, y, 0.5 * (i + 1), g).stroke(colors.lime_green).strokeWidth(0.5).fill('none');
+                }
+            }
+        }
+
+        r.draw();
+    </script>
+</body>
+
+</html>
