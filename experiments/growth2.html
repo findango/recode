@@ -42,8 +42,8 @@
         let ys = Array(100).fill(30);
         for (let i = 0; i < 80; i++) {
             ys = ys.map((y, idx) => y + 5 * noise.get(idx / 20, i / 5));
+
             const p = r.path(0, 0, canvas).strokeWidth(1).stroke(colors.deep_blue).fill('none');
-            const off = Math.random() * TAU;
             ys.forEach((radius, idx) => {
                 const x = Math.cos(idx * TAU / 99) * radius;
                 const y = Math.sin(idx * TAU / 99) * radius;

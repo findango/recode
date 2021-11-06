@@ -43,6 +43,7 @@
         let ys = Array(100).fill(260);
         for (let i = 0; i < 25; i++) {
             ys = ys.map((y, idx) => y - 5 * noise.get(idx / 20, i / 5));
+
             const p = r.path(0, 0, canvas).strokeWidth(1).stroke(colors.deep_blue).fill('none');
             const off = Math.random() * TAU;
             ys.forEach((radius, idx) => {
